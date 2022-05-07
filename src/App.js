@@ -6,6 +6,7 @@ import ContactForm from './components/Contact';
 
 function App() {
 
+	
 	// Define categories
 	const [categories] = useState([
 		{
@@ -17,6 +18,9 @@ function App() {
     	{ name: 'landscape', description: 'Fields, farmhouses, waterfalls, and the beauty of nature' }
 	]);
 
+	// Define a useState hook to select or deselect the contact form
+	const [contactSelected, setContactSelected] = useState(false);
+
 	// useState hook for displaying to app
 	const [currentCategory, setCurrentCategory] = useState(categories[0]);
 	
@@ -26,14 +30,20 @@ function App() {
 			categories={categories}
 			setCurrentCategory={setCurrentCategory}
 			currentCategory={currentCategory}
+			contactSelected={contactSelected}
+			setContactSelected={setContactSelected}
 			>
 		</Nav>
 		<main>
-			<ContactForm />
-			<Gallery
-				currentCategory={currentCategory}
-			/>
-			<About></About>
+			{/* Conditionally render contact form with ternary operator */}
+			{!contactSelected ? (
+				<>
+					<Gallery currentCategory={currentCategory}></Gallery>
+					<About></About>
+				</>
+			) :  (
+				<ContactForm></ContactForm>
+			)}
 		</main>
 	</div>
   );
