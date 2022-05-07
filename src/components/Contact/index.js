@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {validateEmail} from "../../utils/helpers";
 
 function ContactForm() {
     // state hook to control the form component
@@ -7,9 +8,35 @@ function ContactForm() {
         {name: "", email: "", message: ""}
     );
 
+    // error message hook
+    const [errorMessage, setErrorMessage] = useState("");
+
     // Event handler to handle form input changes, such as keystrokes
     function handleChange(e) {
-        setFormState({...formState, [e.target.name]: e.target.value})
+        // Validate email input as user is typing
+        if (e.target.name === "email") {
+            const isValid = validateEmail(e.target.value);
+            
+            if (!isValid) {
+                setErrorMessage("Please enter a valid email address")
+            }
+            else {
+                setErrorMessage("");
+            }
+        }
+        // Validate other inputs on the basis of length (required)
+        else {
+            if (!e.target.value.length) {
+                setErrorMessage(`${e.target.name} is required`);
+            }
+            else {
+                setErrorMessage("");
+            }
+        }
+
+        if (!errorMessage) {
+            setFormState({...formState, [e.target.name]: e.target.value})
+        }
     }
 
     // Handle form submission
@@ -29,7 +56,7 @@ function ContactForm() {
                         type="text"
                         name="name" 
                         defaultValue={formState.name}
-                        onChange={handleChange}
+                        onBlur={handleChange}
                     />
                 </div>
                 <div>
@@ -38,7 +65,7 @@ function ContactForm() {
                         type="email"
                         name="email"
                         defaultValue={formState.email}
-                        onChange={handleChange}
+                        onBlur={handleChange}
                         />
                 </div>
                 <div>
@@ -48,9 +75,15 @@ function ContactForm() {
                         cols="45"
                         rows="10"
                         defaultValue={formState.message}
-                        onChange={handleChange}>
+                        onBlur={handleChange}>
                     </textarea>
                 </div>
+                {/* Conditionally render the error message div if an error exists in form validation */}
+                {errorMessage && (
+                    <div>
+                        <p className="error-text">{errorMessage}</p>
+                    </div>
+                )}
                 <button type="submit">Submit</button>
             </form>
         </section>
