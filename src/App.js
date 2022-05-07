@@ -18,17 +18,19 @@ function App() {
 
 	// useState hook for displaying to app
 	const [currentCategory, setCurrentCategory] = useState(categories[0]);
-
-  return (
-    <div>
+	
+	return (
+		<div>
 		<Nav
 			categories={categories}
 			setCurrentCategory={setCurrentCategory}
 			currentCategory={currentCategory}
-		>
+			>
 		</Nav>
 		<main>
-			<Gallery></Gallery>
+			<Gallery
+				currentCategory={currentCategory}
+			/>
 			<About></About>
 		</main>
 	</div>
